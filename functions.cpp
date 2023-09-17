@@ -1,91 +1,138 @@
 #include <iostream>
-#include "functions.h"
 
-using std::cout, std::endl;
-
-bool is_valid_range(int a, int b) {
-	// TODO(student): validate input range
-
-	if ((a <= 9) && (b > 10000) && (a >= b)) {
-		return false;
-	}
-	else if ((10 <= a) && (a <= b) && (b < 10000)) {
-		return true;
-	}
-	/*This function returns the boolean value true if and only if inputs a and b satisfy the constraint that 10 <= a <= b < 10000.*/ 
-	return false;
+int Largest(int a, int b, int c) {
+  int d = a;
+  if (b > d) {
+    d = b;
+  } 
+  if (c > d) {
+    d = c;
+  }
+  return d;
 }
 
+bool SumIsEven(int a, int b) {
+  if (((a + b) % 2) == 0) {
+    return true;
+  }
+return false;
+}
 
-char classify_mv_range_type(int number) {
-	bool ismountain = false, isvalley = false, neither = false;
-    int firstdigit, seconddigit, divide = 1, numdigits;
-    int divisor = number;
-	numdigits = 0;
-    while (divisor > 0) { //Counts the number of digits in the "number"
-        numdigits++;
-        divisor = divisor / 10;
+int BoxesNeeded(int apples) {
+  if (((apples % 20) == 0) && (apples > 0)) {
+    return (apples / 20);
+  }
+  if (((apples % 20) != 0) && (apples > 0)) {
+    return (apples / 20) + 1;
+  }
+return 0;
+}
+
+bool SmarterSection(int A_correct, int A_total, int B_correct, int B_total) {
+  if ((A_correct < 0) || (A_total <= 0) || (B_correct < 0) || (B_total <= 0)) {
+    throw std::invalid_argument("Invalid Argument.");
+  }
+  if ((A_correct > A_total) || (B_correct > B_total)) {
+    throw std::invalid_argument("Invalid Argument.");
+  }
+return ((double(A_correct) / A_total) > (double(B_correct) / B_total));
+}
+
+bool GoodDinner(int pizzas, bool is_weekend) {
+  if ((pizzas >= 10) && (pizzas <= 20) && (is_weekend == false)) {
+    return true;
+  }
+  else if ((pizzas >= 10) && (is_weekend == true)) {
+    return true;
+  }
+return false;
+}
+
+int SumBetween(int low, int high) {
+
+  if (low > high) {
+    throw std::invalid_argument("Invalid Argument.");
+  }
+  if (low == high) { //Just return the low integer. Ex. 5 & 5, answer is 5
+    return high;
+  }
+  if (-low == high) { //Numbers will just cancel out
+    return 0;
+  }
+  if ((low + high) == -1) { // If 4 & -5, return 4
+    return low;
+  }
+  if ((low + high) == 1) { //If -5 & 6 return 6
+    return high;
+  }
+  if ((low == INT32_MIN) && (high == INT32_MAX)) {
+    return INT32_MIN;
+  }
+  if ((low < 0) && (high > 0)) {
+    low = -low; // Turn low into a positive number
+    if (low > high) {
+      int newhigh = low;
+      low = high;
+      high = newhigh;
     }
+    low++;
+  }
+  if (low == high) { 
+    return low;
+  }
+  else if ((low * -1) == high) {
+    return 0;
+  }
 
-    for (int i = 0; i < numdigits - 1; i++) { //this will find out what to divide by
-    	divide *= 10;						  // Ex. 12345 / 10 ^ (numdigits - 1)
-	}
-
-	for (int j = 1; j < numdigits; j++) { 
-
-		firstdigit = number / divide;	// To grab the first digit in the number
-		number = number % divide;		// This saves number as the remainder from the first operation
-		divide = (divide / 10);			// Divide divisor by 10 to lower what next number will be divided by
-		seconddigit = number / divide;  // Saves second number
-
-		if ((j % 2) != 0) { //While in odd iteration, ex d1 && d2 or d3 && d4
-
-			if (firstdigit > seconddigit) {
-				isvalley = true;
-			}
-			else if (firstdigit < seconddigit) {
-				ismountain = true;
-			}
-			else {
-				neither = true;
-			}
-		}
-		else if ((j % 2) == 0) { //While in even iteration, ex d2 && d3.
-
-			if (firstdigit < seconddigit) {
-				isvalley = true;
-			}
-			else if (firstdigit > seconddigit) {
-				ismountain = true;
-			}
-			else {
-				neither = true;
-			}
-		}
-	}
-	if ((ismountain == true) && (isvalley == false) && (neither == false)) {
-		return 'M';
-	}
-	else if ((ismountain == false) && (isvalley == true) && (neither == false)) {
-		return 'V';
-	}
-	else {
-		return 'N';
-	}
+  int value = 0;
+  for (int n = low; n <= high; n++) {
+    value += n;
+    //Prevent from infinite loops in the for loop
+    if ((n > 0) && (value > INT32_MAX - n)) { 
+    throw std::overflow_error("Overflow Error.");
+    }
+    if ((n < 0) && (value < INT32_MIN - n)) {
+      throw std::overflow_error("Overflow Error.");
+    }
+  }
+  // if ((high - low) > 0) {
+  //   if (high > 0) {
+  //     if (INT32_MAX - high < low) {
+  //       throw std::overflow_error("Overflow Error.");
+  //     }
+  //   }
+  //   else {
+  //     if (INT32_MIN - low > high) {
+  //       throw std::overflow_error("Overflow Error.");
+  //     }
+  //   }
+  // }
+  // else {
+  //   if (low < 0) {
+  //     if (INT32_MIN - low > high) {
+  //       throw std::overflow_error("Overflow Error.");
+  //     }
+  //   } else {
+  //     if (INT32_MAX - high < low) {
+  //       throw std::overflow_error("Overflow Error.");
+  //     }
+  //   }
+  // }
+  // }
+  return value;
 }
-void count_valid_mv_numbers(int a, int b) {
-	// TODO(student): count the number of valid mountain ranges and valley
-	// ranges in the range [a, b] and print out to console using the format
-	// in Requirement 4 of the homework prompt
-	int countM = 0, countV = 0, i = 0;
-	for (i = a; i < b + 1; ++i) {
 
-		if (classify_mv_range_type(i) == 'M') {
-			countM++;
-		}
-		else if (classify_mv_range_type(i) == 'V') {
-			countV++;
-		}
-	}
-	cout << "There are " << countM << " mountain ranges and " << countV << " valley ranges between " << a << " and " << b << "." << endl;
+
+int Product(int a, int b) {
+  if ((((INT32_MIN == a) && (b == -1))) || ((INT32_MIN == b) && (a == -1))) {
+    throw std::overflow_error("Product overflow.");
+  }
+
+  if ((b > 0) && ((a > (INT32_MAX / b)) || (a < (INT32_MIN / b)))) {
+    throw std::overflow_error("Product overflow.");
+  }
+  else if ((b < 0) && ((a < (INT32_MAX / b)) || (a > (INT32_MIN / b)))) {
+    throw std::overflow_error("Product overflow.");
+  }
+return a * b;
 }
